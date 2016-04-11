@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_status"
+            android:title="@string/status" />
+        <item
+            android:id="@+id/nav_manual_control"
+            android:title="@string/manual_control" />
+        <item android:title="@string/configuration">
+            <menu>
+                <item
+                    android:id="@+id/nav_connections"
+                    android:title="@string/connections"
+                    android:icon="@drawable/ic_bluetooth_24dp"/>
+                <item
+                    android:id="@+id/nav_settings"
+                    android:title="@string/settings"
+                    android:icon="@drawable/ic_settings_applications_24dp" />
+            </menu>
+        </item>
+    </group>
+
+</menu>
