@@ -7,6 +7,11 @@
     <string name="title_activity_display_message">My Message</string>
     <string name="title_activity_main_nav">Wireless LED Matrix</string>
     <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_ble_connection">Connect to a Device</string>
+
+    <!-- connection page -->
+    <string name="unknown_device">Unknown Device</string>
+    <string name="scan_button_text">Scan for Devices</string>
 
     <!-- Navigation drawer titles -->
     <string name="status">Status</string>
