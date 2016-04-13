@@ -5,4 +5,20 @@
         android:title="@string/pref_enable"
         android:summary="@string/pref_enable_summ"
         android:defaultValue="true" />
+
+    <CheckBoxPreference
+        android:key="pref_recycleconnection"
+        android:title="@string/pref_recycleconnection"
+        android:summary="@string/pref_recycleconnection_summ"
+        android:defaultValue="false" />
+    <CheckBoxPreference
+        android:key="pref_forcecloseconnection"
+        android:title="@string/pref_forcecloseconnection"
+        android:summary="@string/pref_forcecloseconnection_summ"
+        android:defaultValue="true" />
+    <CheckBoxPreference
+        android:key="pref_gattautoconnect"
+        android:title="@string/pref_gattautoconnect"
+        android:summary="@string/pref_gattautoconnect_summ"
+        android:defaultValue="false" />
 </PreferenceScreen>

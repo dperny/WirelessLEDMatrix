@@ -26,4 +26,13 @@
     <!-- Strings for preferences -->
     <string name="pref_enable">Automatically Push Status</string>
     <string name="pref_enable_summ">Automatically push the phone status to the LED matrix</string>
+    <string name="pref_recycleconnection">Recycle Connections</string>
+    <string name="pref_recycleconnection_summ">Reuse existing Bluetooth connections</string>
+    <string name="pref_forcecloseconnection">Close Connection</string>
+    <string name="pref_forcecloseconnection_summ">Force close connection before new connect</string>
+    <string name="pref_gattautoconnect">Reconnect</string>
+    <string name="pref_gattautoconnect_summ">Try to reconnect when the connection to a device fails</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

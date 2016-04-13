@@ -16,9 +16,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.adafruit.bluefruit.le.connect.ble.BleManager;
 
 import java.util.ArrayList;
 
@@ -32,6 +35,8 @@ public class BleConnectionActivity extends AppCompatActivity {
 
     private boolean mScanning;
     private Handler mHandler;
+
+    private BleManager mBleManager;
 
     private static final int REQUEST_ENABLE_BT = 1;
     // stop scan after 10 seconds
@@ -53,6 +58,21 @@ public class BleConnectionActivity extends AppCompatActivity {
         // setContentView(R.layout.activity_ble_connection);
 
         listView = (ListView) findViewById(R.id.bluetooth_device_list);
+        //TODO: finish the on click listener
+        listView.setOnItemClickListener(
+                new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        final BluetoothDevice device = mLeDeviceListAdapter.getDevice(position);
+                        if(device == null) return;
+                        if(mScanning) {
+                            // stop scanning
+                            scanLeDevice(false);
+                        }
+                        connect(device);
+                    }
+                }
+        );
 
         final BluetoothManager bluetoothManager =
                 (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
@@ -175,6 +195,10 @@ public class BleConnectionActivity extends AppCompatActivity {
 
             return view;
         }
+    }
+
+    private void connect(BluetoothDevice device) {
+        boolean isConnecting = mBleManager.connect(this, device.getAddress());
     }
 
     // device scan callback
