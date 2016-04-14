@@ -122,7 +122,7 @@ public class BleManager implements BleGattExecutor.BleExecutorListener {
         }
 
         mDevice = mAdapter.getRemoteDevice(address);
-        if(mDevice != null) {
+        if(mDevice == null) {
             Log.w(TAG, "Device not found. Unable to connect.");
             return false;
         }

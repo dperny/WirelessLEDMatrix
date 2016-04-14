@@ -1,8 +1,11 @@
 package net.dperny.wirelessledmatrix;
 
 import android.Manifest;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 
 import android.support.design.widget.NavigationView;
@@ -17,7 +20,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainNavActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+                    BleStatusFragment.OnStatusFragmentInteractionListener,
+                    BleControlFragment.OnControlFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +42,11 @@ public class MainNavActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         if(navigationView != null) {
             navigationView.setNavigationItemSelectedListener(this);
+        }
+
+        // on first time, display the first item
+        if(savedInstanceState == null) {
+            displayView(0);
         }
     }
 
@@ -72,6 +82,23 @@ public class MainNavActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    private void displayView(int position) {
+        Fragment fragment = null;
+        if(position == 0) {
+            fragment = new BleStatusFragment();
+            setTitle(R.string.title_fragment_ble_status);
+        } else if(position == 1) {
+            fragment = new BleControlFragment();
+            setTitle(R.string.title_fragment_ble_control);
+        }
+
+        if(fragment != null) {
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.content_frame, fragment).commit();
+        }
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -80,9 +107,9 @@ public class MainNavActivity extends AppCompatActivity
         Intent intent;
 
         if (id == R.id.nav_status) {
-            // Handle the camera action
+            displayView(0);
         } else if (id == R.id.nav_manual_control) {
-
+            displayView(1);
         } else if (id == R.id.nav_connections) {
             intent = new Intent(this, BleConnectionActivity.class);
             startActivity(intent);
@@ -97,4 +124,12 @@ public class MainNavActivity extends AppCompatActivity
         }
         return true;
     }
+
+    @Override
+    public void onStatusFragmentInteraction() {
+        // do nothing
+    }
+
+    @Override
+    public void onControlFragmentInteraction() {}
 }

@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.ListActivity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 
@@ -12,6 +14,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,12 +23,15 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.adafruit.bluefruit.le.connect.ble.BleManager;
 
 import java.util.ArrayList;
 
-public class BleConnectionActivity extends AppCompatActivity {
+public class BleConnectionActivity extends AppCompatActivity implements BleManager.BleManagerListener {
+
+    private final String TAG = BleConnectionActivity.class.getSimpleName();
 
     // ListView inside of this AppCompatActivity
     ListView listView;
@@ -64,7 +70,10 @@ public class BleConnectionActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         final BluetoothDevice device = mLeDeviceListAdapter.getDevice(position);
-                        if(device == null) return;
+                        if(device == null) {
+                            Log.w(TAG, "Device was null, nothing is happening");
+                            return;
+                        }
                         if(mScanning) {
                             // stop scanning
                             scanLeDevice(false);
@@ -89,6 +98,9 @@ public class BleConnectionActivity extends AppCompatActivity {
                 startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
             }
         }
+
+        mBleManager = BleManager.getInstance(this);
+        mBleManager.setBleListener(this);
 
         // Initialize list view adapter
         mLeDeviceListAdapter = new LeDeviceListAdapter();
@@ -220,5 +232,32 @@ public class BleConnectionActivity extends AppCompatActivity {
         TextView deviceName;
         TextView deviceAddress;
     }
+
+    @Override
+    public void onConnected() {
+        mBleManager.setBleListener(null);
+        finish();
+    }
+
+    @Override
+    public void onConnecting() {
+        Toast toast = Toast.makeText(this,R.string.device_connecting, Toast.LENGTH_SHORT);
+        toast.show();
+    }
+
+    @Override
+    public void onDisconnected() {}
+
+    @Override
+    public void onServicesDiscovered() {}
+
+    @Override
+    public void onDataAvailable(BluetoothGattCharacteristic characteristic) {}
+
+    @Override
+    public void onDataAvailable(BluetoothGattDescriptor descriptor) {}
+
+    @Override
+    public void onReadRemoteRssi(int rssi){}
 
 }

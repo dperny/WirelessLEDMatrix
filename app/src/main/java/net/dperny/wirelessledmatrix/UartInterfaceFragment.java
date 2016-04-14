@@ -1,5 +1,6 @@
 package net.dperny.wirelessledmatrix;
 
+import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGattService;
 import android.app.Fragment;
 import android.util.Log;
@@ -24,6 +25,7 @@ public class UartInterfaceFragment extends Fragment {
     // Data
     protected BleManager mBleManager;
     protected BluetoothGattService mUartService;
+    protected BluetoothDevice mDevice;
 
     // region Send Data to UART
     protected void sendData(String text) {

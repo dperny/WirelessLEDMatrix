@@ -7,9 +7,12 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.adafruit.bluefruit.le.connect.ble.BleManager;
 
@@ -17,7 +20,7 @@ import com.adafruit.bluefruit.le.connect.ble.BleManager;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link BleStatusFragment.OnFragmentInteractionListener} interface
+ * {@link BleStatusFragment.OnStatusFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link BleStatusFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -30,8 +33,9 @@ public class BleStatusFragment extends Fragment implements BleManager.BleManager
 
     // Data
     private BleManager mBleManager;
+    private BluetoothDevice mDevice;
 
-    private OnFragmentInteractionListener mListener;
+    private OnStatusFragmentInteractionListener mListener;
 
     public BleStatusFragment() {
         // Required empty public constructor
@@ -55,38 +59,60 @@ public class BleStatusFragment extends Fragment implements BleManager.BleManager
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mBleManager = BleManager.getInstance(this.getContext());
-
-        BluetoothDevice device = mBleManager.getConnectedDevice();
-        if(device != null) {
-            // set some properties of the device
-        } else {
-            // set the default values on this screen
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // get the BLE manager
+        mBleManager = BleManager.getInstance(this.getContext());
+        mBleManager.setBleListener(this);
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_main_status, container, false);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mDevice = mBleManager.getConnectedDevice();
+        if(mDevice != null) {
+            View v = getView();
+            if(v != null) {
+                TextView name = (TextView) v.findViewById(R.id.device_name);
+                TextView addr = (TextView) v.findViewById(R.id.device_address);
+                name.setText(mDevice.getName());
+                addr.setText(mDevice.getAddress());
+                // TODO: figure out how to get device rssi
+            }
+        } else {
+            Log.d(TAG, "No device connected");
+            // no need to alter anything. default values work just fine
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        // remove this as the listener, because it does not exist anymore
+        mBleManager.setBleListener(null);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+            mListener.onStatusFragmentInteraction();
         }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof OnStatusFragmentInteractionListener) {
+            mListener = (OnStatusFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement OnControlFragmentInteractionListener");
         }
     }
 
@@ -106,9 +132,9 @@ public class BleStatusFragment extends Fragment implements BleManager.BleManager
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    public interface OnStatusFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onStatusFragmentInteraction();
     }
 
     @Override
@@ -123,7 +149,21 @@ public class BleStatusFragment extends Fragment implements BleManager.BleManager
 
     @Override
     public void onDisconnected() {
-        // TODO: change some screen shit when we disconnect
+        mDevice = mBleManager.getConnectedDevice();
+        View v = getView();
+        if(v != null) {
+            TextView name = (TextView) v.findViewById(R.id.device_name);
+            TextView addr = (TextView) v.findViewById(R.id.device_address);
+            if (mDevice != null) {
+                name.setText(mDevice.getName());
+                addr.setText(mDevice.getAddress());
+            } else {
+                name.setText(R.string.no_device_name);
+                addr.setText(R.string.no_device_address);
+            }
+        }
+        Toast toast = Toast.makeText(this.getContext(), R.string.device_connecting,Toast.LENGTH_SHORT);
+        toast.show();
     }
 
     public void onServicesDiscovered() { }

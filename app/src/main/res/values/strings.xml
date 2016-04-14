@@ -8,6 +8,8 @@
     <string name="title_activity_main_nav">Wireless LED Matrix</string>
     <string name="title_activity_settings">Settings</string>
     <string name="title_activity_ble_connection">Connect to a Device</string>
+    <string name="title_fragment_ble_status">Status</string>
+    <string name="title_fragment_ble_control">Manual Control</string>
 
     <!-- connection page -->
     <string name="unknown_device">Unknown Device</string>
@@ -23,6 +25,14 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <string name="no_device_name">No Device Name Found</string>
+    <string name="no_device_address">Address Unavailable</string>
+    <string name="no_device_rssi">N/A mDb</string>
+
+    <string name="device_connecting">Connecting...</string>
+    <string name="device_connected">Connected</string>
+    <string name="device_disconnected">Disconnected</string>
+
     <!-- Strings for preferences -->
     <string name="pref_enable">Automatically Push Status</string>
     <string name="pref_enable_summ">Automatically push the phone status to the LED matrix</string>
@@ -33,6 +43,4 @@
     <string name="pref_gattautoconnect">Reconnect</string>
     <string name="pref_gattautoconnect_summ">Try to reconnect when the connection to a device fails</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
