@@ -5,9 +5,9 @@
     tools:context="net.dperny.wirelessledmatrix.BleControlFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ListView
+        android:id="@+id/command_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="nothing here" />
-
+        android:layout_height="match_parent">
+    </ListView>
 </FrameLayout>

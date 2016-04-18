@@ -6,11 +6,18 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.adafruit.bluefruit.le.connect.ble.BleManager;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 
 /**
@@ -25,7 +32,26 @@ public class BleControlFragment extends UartInterfaceFragment implements BleMana
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 
+    private static final String TAG = BleControlFragment.class.getSimpleName();
+
     private OnControlFragmentInteractionListener mListener;
+
+    private ListView listView;
+    private ArrayAdapter<String> mCommandAdapter;
+
+    // Commands
+    private static final String COMMANDS[] = {
+            "PHONE"
+            , "MUTE"
+            , "UNMUTE"
+            , "MUSIC"
+            , "NEWMSG"
+            , "ERROR"
+            , "WIFI1"
+            , "WIFI2"
+            , "WIFI3"
+            , "BLUETOOTH"
+    };
 
     public BleControlFragment() {
         // Required empty public constructor
@@ -83,7 +109,21 @@ public class BleControlFragment extends UartInterfaceFragment implements BleMana
     @Override
     public void onResume() {
         super.onResume();
-        sendData("PHONE");
+
+        listView = (ListView) getView().findViewById(R.id.command_list);
+        mCommandAdapter = new ArrayAdapter<String>(getContext(), R.layout.listitem_command, COMMANDS);
+        listView.setAdapter(mCommandAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                final String command = mCommandAdapter.getItem(position);
+                if(mDevice != null) {
+                    sendData(command);
+                } else {
+                    Log.w(TAG, "No device connected");
+                }
+            }
+        });
     }
 
     @Override
@@ -115,8 +155,8 @@ public class BleControlFragment extends UartInterfaceFragment implements BleMana
 
     @Override
     public void onServicesDiscovered() {
+        Log.d(TAG, "Services discovered callback");
         mUartService = mBleManager.getGattService(UUID_SERVICE);
-
         mBleManager.enableNotification(mUartService, UUID_RX, true);
     }
 

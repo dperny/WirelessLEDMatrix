@@ -302,6 +302,7 @@ public class BleManager implements BleGattExecutor.BleExecutorListener {
 
     public BluetoothGattService getGattService(String uuid) {
         if (mGatt != null) {
+            Log.d(TAG, "called getGattService with UUID" + uuid);
             final UUID serviceUuid = UUID.fromString(uuid);
             return mGatt.getService(serviceUuid);
         } else {
